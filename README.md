@@ -5,4 +5,4 @@
 ```
 LOVENSE_TOKEN=my_lovense_token
 ```
-4. Run main.py
+4. Run `main.py`
