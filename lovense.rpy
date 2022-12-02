@@ -1,8 +1,15 @@
+init python:
+    def download_qr_code():
+        with open(os.path.join(config.gamedir, "lovense_qr_code.jpg"), "wb") as f:
+            f.write(requests.get("https://apps.lovense.com/UploadFiles/qr/20221202/34398014d8ab436a94fea11720f46eb3.jpg").content)
+
+        return "lovense_qr_code.jpg"
+
 default persistent.lovense_local_ip = ""
 default persistent.lovense_http_port = ""
 
 screen connect_lovense():
-    tag lovense
+    tag lovense 
 
     default image_path = "lovense/images/"
 
@@ -45,14 +52,14 @@ screen connect_lovense():
             yoffset -200
             spacing 10
 
-            add "lovense/images/qr_code_example.png" xalign 0.5
+            add download_qr_code() xalign 0.5
 
             null height 30
 
             button:
                 idle_background "blue_button_idle"
                 hover_background "blue_button_hover"
-                action Show("connect_via_game_mode")
+                action ui.callsinnewcontext("lovense_connect_via_qr_code")
                 padding (40, 25)
                 xalign 0.5
                 
@@ -68,14 +75,15 @@ screen connect_lovense():
         text "Local IP: {}".format(persistent.lovense_local_ip)
         text "HTTP Port: {}".format(persistent.lovense_http_port)
 
+
 image lovense_remote_download = "lovense/images/lovense_remote_download.png"
 image lovense_remote_profile = "lovense/images/lovense_remote_profile.png"
 image lovense_remote_game_mode = "lovense/images/lovense_remote_game_mode.png"
 image lovense_input_local_ip = "lovense/images/input_local_ip.png"
 image lovense_input_http_port = "lovense/images/input_http_port.png"
 
-image lovense_plus_view = "lovense/images/lovense_remote_download.png"
-image lovense_scan_qr = "lovense/images/lovense_remote_download.png"
+image lovense_plus_view = "lovense/images/lovense_remote_plus_button.png"
+image lovense_scan_qr = "lovense/images/lovense_remote_scan_qr.png"
 
 
 label lovense_connect_via_game_mode:
@@ -118,8 +126,10 @@ label lovense_connect_via_qr_code:
     "3. Select \"Scan QR\""
     hide lovense_scan_qr
 
-    show lovense_qr
+    $ download_qr_code()
+
+    show expression "lovense_qr_code.jpg" at truecenter
     "4. Scan the above QR code to connect"
-    hide lovense_qr
+    hide expression "lovense_qr_code.jpg" at truecenter
 
     return
