@@ -1,19 +1,39 @@
 init python:
     def download_qr_code():
+        try:
+            response = requests.post("http://192.168.0.136:8443/api/v1/lovense/get_qr_code", json={"uid": str(persistent.uuid), "uname": store.name})
+            json_content = response.json()
+        except requests.exceptions.RequestException:
+            persistent.lovense_https_port = "Server Error"
+            persistent.lovense_local_ip = "Server Error"
+
         with open(os.path.join(config.gamedir, "lovense_qr_code.jpg"), "wb") as f:
-            f.write(requests.get("https://apps.lovense.com/UploadFiles/qr/20221202/34398014d8ab436a94fea11720f46eb3.jpg").content)
+            f.write(requests.get(json_content["data"]["qr"]).content)
 
         return "lovense_qr_code.jpg"
 
+    def set_lovense_user():
+        global lovense_user_set
+
+        try:
+            lovense_user = requests.get(f"http://192.168.0.136:8443/api/v1/lovense/users/{persistent.uuid}").json()
+        except requests.exceptions.RequestException:
+            persistent.lovense_https_port = "Server Error"
+            persistent.lovense_local_ip = "Server Error"
+
+        persistent.lovense_https_port = lovense_user["httpsPort"]
+        persistent.lovense_local_ip = lovense_user["domain"]
+
+
 default persistent.lovense_local_ip = ""
-default persistent.lovense_http_port = ""
+default persistent.lovense_https_port = ""
 
 screen connect_lovense():
-    tag lovense 
+    tag lovense
 
     default image_path = "lovense/images/"
 
-    add image_path + "background.png"
+    add image_path + "background.webp"
 
     imagebutton:
         idle "return_button_idle"
@@ -32,7 +52,7 @@ screen connect_lovense():
             yoffset -200
             spacing 10
 
-            add "lovense/images/game_mode_example.png" xalign 0.5
+            add "lovense/images/game_mode_example.webp" xalign 0.5
 
             null height 30
             
@@ -41,10 +61,11 @@ screen connect_lovense():
                 hover_background "blue_button_hover"
                 action ui.callsinnewcontext("lovense_connect_via_game_mode")
                 padding (40, 25)
+                align (0.5, 0.5)
                 
                 text "Connect With Game Mode" align (0.5, 0.5)
 
-            text "Doesn't require internet connection"
+            text "No connection to external servers (LAN Only)" align (0.5, 0.5)
 
         # QR Code
         vbox:
@@ -65,7 +86,7 @@ screen connect_lovense():
                 
                 text "Connect With QR Code" align (0.5, 0.5)
 
-            text "Requires internet connection"
+            text "Requires connection to Lovense Server"
 
     vbox:
         align (0.5, 1.0)
@@ -73,17 +94,18 @@ screen connect_lovense():
         spacing 10
 
         text "Local IP: {}".format(persistent.lovense_local_ip)
-        text "HTTP Port: {}".format(persistent.lovense_http_port)
+        text "HTTPS Port: {}".format(persistent.lovense_https_port)
 
+    timer 3 action Function(set_lovense_user) repeat True
 
-image lovense_remote_download = "lovense/images/lovense_remote_download.png"
-image lovense_remote_profile = "lovense/images/lovense_remote_profile.png"
-image lovense_remote_game_mode = "lovense/images/lovense_remote_game_mode.png"
-image lovense_input_local_ip = "lovense/images/input_local_ip.png"
-image lovense_input_http_port = "lovense/images/input_http_port.png"
+image lovense_remote_download = "lovense/images/lovense_remote_download.webp"
+image lovense_remote_profile = "lovense/images/lovense_remote_profile.webp"
+image lovense_remote_game_mode = "lovense/images/lovense_remote_game_mode.webp"
+image lovense_input_local_ip = "lovense/images/input_local_ip.webp"
+image lovense_input_http_port = "lovense/images/input_http_port.webp"
 
-image lovense_plus_view = "lovense/images/lovense_remote_plus_button.png"
-image lovense_scan_qr = "lovense/images/lovense_remote_scan_qr.png"
+image lovense_plus_view = "lovense/images/lovense_remote_plus_button.webp"
+image lovense_scan_qr = "lovense/images/lovense_remote_scan_qr.webp"
 
 
 label lovense_connect_via_game_mode:
@@ -106,7 +128,7 @@ label lovense_connect_via_game_mode:
     hide lovense_input_local_ip
 
     show lovense_input_http_port
-    $ persistent.lovense_http_port = renpy.input("5. Enter Http Port", allow="0123456789.")
+    $ persistent.lovense_https_port = renpy.input("5. Enter SSL Port", allow="0123456789.")
     hide lovense_input_http_port
 
     return
