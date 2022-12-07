@@ -10,7 +10,7 @@ init python:
                 "apiVer": 1
             }
 
-            response = requests.post(f"https://{domain}:{httpsPort}/command", json=data)
+            response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
 
         @staticmethod
         def rotate(strength: int, time: int = 0, stop_previous: bool = True):
@@ -22,7 +22,7 @@ init python:
                 "apiVer": 1
             }
 
-            response = requests.post(f"https://{domain}:{httpsPort}/command", json=data)
+            response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
 
         @staticmethod
         def pump(strength: int, time: int = 0, stop_previous: bool = True):
@@ -34,7 +34,7 @@ init python:
                 "apiVer": 1
             }
 
-            response = requests.post(f"https://{domain}:{httpsPort}/command", json=data)
+            response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
 
         @staticmethod
         def stop():
@@ -45,4 +45,4 @@ init python:
                 "apiVer": 1
             }
 
-            response = requests.post(f"https://{domain}:{httpsPort}/command", json=data)
+            response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)

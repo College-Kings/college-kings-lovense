@@ -7,7 +7,7 @@ init python:
             with open(os.path.join(config.gamedir, "lovense_qr_code.jpg"), "wb") as f:
                 f.write(requests.get(json_content["data"]["qr"]).content)
         except requests.exceptions.RequestException:
-            persistent.lovense_https_port = "Server Error"
+            persistent.lovense_http_port = "Server Error"
             persistent.lovense_local_ip = "Server Error"
 
         return "lovense_qr_code.jpg"
@@ -18,18 +18,17 @@ init python:
         try:
             response = requests.get(f"http://192.168.0.136:8443/api/v1/lovense/users/{persistent.uuid}")
             lovense_user = response.json()
-        except requests.exceptions.RequestException:
-            persistent.lovense_https_port = "Server Error"
+        except Exception:
+            persistent.lovense_http_port = "Server Error"
             persistent.lovense_local_ip = "Server Error"
-        except JSONDecodeError:
             return
-        
-        persistent.lovense_https_port = lovense_user["httpsPort"]
+
+        persistent.lovense_http_port = lovense_user["httpPort"]
         persistent.lovense_local_ip = lovense_user["domain"]
 
 
 default persistent.lovense_local_ip = ""
-default persistent.lovense_https_port = ""
+default persistent.lovense_http_port = ""
 
 screen connect_lovense():
     tag lovense
@@ -98,7 +97,7 @@ screen connect_lovense():
         spacing 10
 
         text "Local IP: {}".format(persistent.lovense_local_ip)
-        text "HTTPS Port: {}".format(persistent.lovense_https_port)
+        text "HTTPS Port: {}".format(persistent.lovense_http_port)
 
     timer 3 action Function(set_lovense_user) repeat True
 
@@ -132,7 +131,7 @@ label lovense_connect_via_game_mode:
     hide lovense_input_local_ip
 
     show lovense_input_http_port
-    $ persistent.lovense_https_port = renpy.input("5. Enter SSL Port", allow="0123456789.")
+    $ persistent.lovense_http_port = renpy.input("5. Enter HTTP Port", allow="0123456789.")
     hide lovense_input_http_port
 
     return
