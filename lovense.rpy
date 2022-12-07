@@ -1,14 +1,14 @@
 init python:
     def download_qr_code():
         try:
-            response = requests.post("http://192.168.0.136:8443/api/v1/lovense/get_qr_code", json={"uid": str(persistent.uuid), "uname": store.name})
+            response = requests.post("http://192.168.0.136:8443/api/v1/lovense/qrCode", json={"uid": str(persistent.uuid), "uname": store.name})
             json_content = response.json()
+
+            with open(os.path.join(config.gamedir, "lovense_qr_code.jpg"), "wb") as f:
+                f.write(requests.get(json_content["data"]["qr"]).content)
         except requests.exceptions.RequestException:
             persistent.lovense_https_port = "Server Error"
             persistent.lovense_local_ip = "Server Error"
-
-        with open(os.path.join(config.gamedir, "lovense_qr_code.jpg"), "wb") as f:
-            f.write(requests.get(json_content["data"]["qr"]).content)
 
         return "lovense_qr_code.jpg"
 
@@ -16,11 +16,14 @@ init python:
         global lovense_user_set
 
         try:
-            lovense_user = requests.get(f"http://192.168.0.136:8443/api/v1/lovense/users/{persistent.uuid}").json()
+            response = requests.get(f"http://192.168.0.136:8443/api/v1/lovense/users/{persistent.uuid}")
+            lovense_user = response.json()
         except requests.exceptions.RequestException:
             persistent.lovense_https_port = "Server Error"
             persistent.lovense_local_ip = "Server Error"
-
+        except JSONDecodeError:
+            return
+        
         persistent.lovense_https_port = lovense_user["httpsPort"]
         persistent.lovense_local_ip = lovense_user["domain"]
 
@@ -30,6 +33,7 @@ default persistent.lovense_https_port = ""
 
 screen connect_lovense():
     tag lovense
+    predict False
 
     default image_path = "lovense/images/"
 
