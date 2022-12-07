@@ -10,7 +10,10 @@ init python:
                 "apiVer": 1
             }
 
-            response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
+            try:
+                response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
+            except requests.exceptions.ConnectionError:
+                return
 
         @staticmethod
         def rotate(strength: int, time: int = 0, stop_previous: bool = True):
@@ -22,7 +25,10 @@ init python:
                 "apiVer": 1
             }
 
-            response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
+            try:
+                response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
+            except requests.exceptions.ConnectionError:
+                return
 
         @staticmethod
         def pump(strength: int, time: int = 0, stop_previous: bool = True):
@@ -34,8 +40,11 @@ init python:
                 "apiVer": 1
             }
 
-            response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
-
+            try:
+                response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
+            except requests.exceptions.ConnectionError:
+                return
+            
         @staticmethod
         def stop():
             data = {
@@ -45,4 +54,7 @@ init python:
                 "apiVer": 1
             }
 
-            response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
+            try:
+                response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
+            except requests.exceptions.ConnectionError:
+                return
