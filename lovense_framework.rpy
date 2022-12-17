@@ -12,7 +12,7 @@ init python:
 
             try:
                 response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
-            except requests.exceptions.ConnectionError:
+            except Exception:
                 return
 
         @staticmethod
@@ -27,7 +27,7 @@ init python:
 
             try:
                 response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
-            except requests.exceptions.ConnectionError:
+            except Exception:
                 return
 
         @staticmethod
@@ -42,7 +42,7 @@ init python:
 
             try:
                 response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
-            except requests.exceptions.ConnectionError:
+            except Exception:
                 return
             
         @staticmethod
@@ -56,5 +56,5 @@ init python:
 
             try:
                 response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
-            except requests.exceptions.ConnectionError:
+            except Exception:
                 return
