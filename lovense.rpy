@@ -30,11 +30,13 @@ init python:
 default persistent.lovense_local_ip = ""
 default persistent.lovense_http_port = ""
 
+
 screen connect_lovense():
     tag lovense
     predict False
 
     default image_path = "lovense/images/"
+    default qr_image = None
 
     add image_path + "background.webp"
 
@@ -76,7 +78,8 @@ screen connect_lovense():
             yoffset -200
             spacing 10
 
-            add download_qr_code() xalign 0.5
+            if qr_image is not None:
+                add qr_image xalign 0.5
 
             null height 30
 
@@ -99,7 +102,8 @@ screen connect_lovense():
         text "Local IP: {}".format(persistent.lovense_local_ip)
         text "HTTPS Port: {}".format(persistent.lovense_http_port)
 
-    timer 3 action Function(set_lovense_user) repeat True
+    timer 5 action [Function(set_lovense_user), SetScreenVariable("qr_image", download_qr_code())] repeat True
+
 
 image lovense_remote_download = "lovense/images/lovense_remote_download.webp"
 image lovense_remote_profile = "lovense/images/lovense_remote_profile.webp"
