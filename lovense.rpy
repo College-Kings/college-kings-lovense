@@ -1,7 +1,7 @@
 init python:
     def download_qr_code():
         try:
-            response = requests.post("http://192.168.0.136:8443/api/v1/lovense/qrCode", json={"uid": str(persistent.uuid), "uname": store.name})
+            response = requests.post("http://80.5.11.93/api/v1/lovense/qrCode", json={"uid": str(persistent.uuid), "uname": store.name})
             json_content = response.json()
 
             with open(os.path.join(config.gamedir, "lovense_qr_code.jpg"), "wb") as f:
@@ -16,7 +16,7 @@ init python:
         global lovense_user_set
 
         try:
-            response = requests.get(f"http://192.168.0.136:8443/api/v1/lovense/users/{persistent.uuid}")
+            response = requests.get(f"http://80.5.11.93/api/v1/lovense/users/{persistent.uuid}")
             lovense_user = response.json()
         except Exception:
             persistent.lovense_http_port = "Server Error"
