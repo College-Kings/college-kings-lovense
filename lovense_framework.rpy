@@ -12,8 +12,8 @@ init python:
 
             try:
                 response = requests.post(f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command", json=data)
-            except Exception:
-                return
+            except Exception as e:
+                print(e)
 
         @staticmethod
         def rotate(strength: int, time: int = 0, stop_previous: bool = True):
