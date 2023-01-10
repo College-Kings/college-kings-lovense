@@ -100,7 +100,7 @@ screen connect_lovense():
         spacing 10
 
         text "Local IP: {}".format(persistent.lovense_local_ip)
-        text "HTTPS Port: {}".format(persistent.lovense_http_port)
+        text "HTTP Port: {}".format(persistent.lovense_http_port)
 
     textbutton "Get your Lovense toys here":
         action OpenURL("https://www.lovense.com/p/CollegeKings")
