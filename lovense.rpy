@@ -1,30 +1,51 @@
 init python:
     def download_qr_code():
+        if (requests.get("http://80.5.11.93:8443/api/v1/server/status").status_code != 200):
+            persistent.lovense_local_ip = "Server Offline"
+            persistent.lovense_http_port = "Please connect with Game Mode"
+            return
+
         try:
             response = requests.post("http://80.5.11.93:8443/api/v1/lovense/qrCode", json={"uid": str(persistent.uuid), "uname": store.name})
             json_content = response.json()
 
             with open(os.path.join(config.gamedir, "lovense_qr_code.jpg"), "wb") as f:
                 f.write(requests.get(json_content["data"]["qr"]).content)
-        except requests.exceptions.RequestException:
-            persistent.lovense_http_port = "Server Error"
+        except requests.exceptions.RequestException as e:
             persistent.lovense_local_ip = "Server Error"
+            persistent.lovense_http_port = "Please connect with Game Mode"
+            print(e)
+            return
 
         return "lovense_qr_code.jpg"
 
     def set_lovense_user():
-        global lovense_user_set
+        if (requests.get("http://80.5.11.93:8443/api/v1/server/status").status_code != 200):
+            persistent.lovense_local_ip = "Server Offline"
+            persistent.lovense_http_port = "Please connect with Game Mode"
+            return
 
         try:
             response = requests.get(f"http://80.5.11.93:8443/api/v1/lovense/users/{persistent.uuid}")
+            
+            if response.status_code == 404:
+                persistent.lovense_local_ip = "User not found"
+                persistent.lovense_http_port = ""
+                return
+
             lovense_user = response.json()
-        except Exception:
-            persistent.lovense_http_port = "Server Error"
+        except Exception as e:
             persistent.lovense_local_ip = "Server Error"
+            persistent.lovense_http_port = "Please connect with Game Mode"
+            print(e)
             return
 
         persistent.lovense_http_port = lovense_user["httpPort"]
         persistent.lovense_local_ip = lovense_user["domain"]
+
+
+    persistent.lovense_local_ip = ""
+    persistent.lovense_http_port = ""
 
 
 default persistent.lovense_local_ip = ""
@@ -73,26 +94,27 @@ screen connect_lovense():
             text "No connection to external servers (LAN Only)" align (0.5, 0.5)
 
         # QR Code
-        vbox:
-            align (0.5, 1.0)
-            yoffset -200
-            spacing 10
+        if persistent.lovense_http_port != "Server Offline":
+            vbox:
+                align (0.5, 1.0)
+                yoffset -200
+                spacing 10
 
-            if qr_image is not None:
-                add qr_image xalign 0.5
+                if qr_image is not None:
+                    add qr_image xalign 0.5
 
-            null height 30
+                null height 30
 
-            button:
-                idle_background "blue_button_idle"
-                hover_background "blue_button_hover"
-                action ui.callsinnewcontext("lovense_connect_via_qr_code")
-                padding (40, 25)
-                xalign 0.5
-                
-                text "Connect With QR Code" align (0.5, 0.5)
+                button:
+                    idle_background "blue_button_idle"
+                    hover_background "blue_button_hover"
+                    action ui.callsinnewcontext("lovense_connect_via_qr_code")
+                    padding (40, 25)
+                    xalign 0.5
+                    
+                    text "Connect With QR Code" align (0.5, 0.5)
 
-            text "Requires connection to Lovense Server"
+                text "Requires connection to Lovense Server"
 
     vbox:
         align (0.5, 1.0)
