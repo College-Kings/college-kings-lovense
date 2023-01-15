@@ -1,6 +1,11 @@
 init python:
     def download_qr_code():
-        if (requests.get("http://80.5.11.93:8443/api/v1/server/status").status_code != 200):
+        try:
+            if (requests.get("http://80.5.11.93:8443/api/v1/server/status").status_code != 200):
+                persistent.lovense_local_ip = "Server Offline"
+                persistent.lovense_http_port = "Please connect with Game Mode"
+                return
+        except Exception:
             persistent.lovense_local_ip = "Server Offline"
             persistent.lovense_http_port = "Please connect with Game Mode"
             return
@@ -20,7 +25,12 @@ init python:
         return "lovense_qr_code.jpg"
 
     def set_lovense_user():
-        if (requests.get("http://80.5.11.93:8443/api/v1/server/status").status_code != 200):
+        try:
+            if (requests.get("http://80.5.11.93:8443/api/v1/server/status").status_code != 200):
+                persistent.lovense_local_ip = "Server Offline"
+                persistent.lovense_http_port = "Please connect with Game Mode"
+                return
+        except Exception:
             persistent.lovense_local_ip = "Server Offline"
             persistent.lovense_http_port = "Please connect with Game Mode"
             return
