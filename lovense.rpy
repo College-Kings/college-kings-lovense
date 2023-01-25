@@ -1,7 +1,7 @@
 init python:
     def get_server_status():
         try:
-            if (requests.get("http://80.5.11.93:8443/api/v1/server/status").status_code != 200):
+            if (requests.get("http://collegekingsbackend-dev.eba-ss5vptmm.eu-west-2.elasticbeanstalk.com/api/v1/server/status").status_code != 200):
                 persistent.lovense_local_ip = "Server Offline"
                 persistent.lovense_http_port = "Please connect with Game Mode"
                 return False
@@ -17,7 +17,7 @@ init python:
             return
 
         try:
-            response = requests.post("http://80.5.11.93:8443/api/v1/lovense/qrCode", json={"uid": str(persistent.uuid), "uname": store.name})
+            response = requests.post("http://collegekingsbackend-dev.eba-ss5vptmm.eu-west-2.elasticbeanstalk.com/api/v1/lovense/qrCode", json={"uid": str(persistent.uuid), "uname": store.name})
             json_content = response.json()
 
             with open(os.path.join(config.gamedir, "lovense_qr_code.jpg"), "wb") as f:
@@ -35,7 +35,7 @@ init python:
             return
 
         try:
-            response = requests.get(f"http://80.5.11.93:8443/api/v1/lovense/users/{persistent.uuid}")
+            response = requests.get(f"http://collegekingsbackend-dev.eba-ss5vptmm.eu-west-2.elasticbeanstalk.com/api/v1/lovense/users/{persistent.uuid}")
             
             if response.status_code == 404:
                 persistent.lovense_local_ip = "User not found"
