@@ -22,7 +22,7 @@ init python:
 
             with open(os.path.join(config.gamedir, "lovense_qr_code.jpg"), "wb") as f:
                 f.write(requests.get(json_content["data"]["qr"]).content)
-        except requests.exceptions.RequestException as e:
+        except Exception as e:
             persistent.lovense_local_ip = "Server Error"
             persistent.lovense_http_port = "Please connect with Game Mode"
             print(e)
