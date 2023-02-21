@@ -134,7 +134,7 @@ screen connect_lovense():
         text "HTTP Port: {}".format(persistent.lovense_http_port)
 
     textbutton "Get your Lovense toys here":
-        action OpenURL("https://www.lovense.com/p/CollegeKings")
+        action OpenURL("https://www.lovense.com/r/mw4xb8")
         align (1.0, 1.0)
         offset (-50, -50)
         text_bold True
