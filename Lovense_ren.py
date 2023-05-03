@@ -1,13 +1,13 @@
+import os
+import requests
+from typing import Any, Optional
+
+from renpy import config, store
+from renpy.game import persistent
+
 """renpy
 init python:
 """
-
-import os
-import requests
-from typing import Any, TYPE_CHECKING, Optional
-
-if TYPE_CHECKING:
-    from renpy.exports import persistent, config, store
 
 
 class Lovense:
