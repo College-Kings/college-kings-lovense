@@ -1,0 +1,1 @@
+default lovense_vibrate_strength = 0
