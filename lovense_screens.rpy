@@ -78,7 +78,7 @@ screen connect_lovense():
         action OpenURL("https://www.lovense.com/r/mw4xb8")
         align (1.0, 1.0)
         offset (-50, -50)
-        text_bold True
+        text_size 32
 
     timer 5 action [Function(set_lovense_user), SetScreenVariable("qr_image", download_qr_code())] repeat True
 
