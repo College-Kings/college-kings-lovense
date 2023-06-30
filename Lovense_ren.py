@@ -85,12 +85,7 @@ class Lovense:
 
 def get_server_status() -> bool:
     try:
-        if (
-            requests.get(
-                "http://ec2-3-8-185-82.eu-west-2.compute.amazonaws.com/api/v1/server/status"
-            ).status_code
-            != 200
-        ):
+        if requests.get("http://81.100.246.35/api/v1/server/status").status_code != 200:
             persistent.lovense_local_ip = "Server Offline"
             persistent.lovense_http_port = "Please connect with Game Mode"
             return False
@@ -108,7 +103,7 @@ def download_qr_code() -> Optional[str]:
 
     try:
         response: requests.Response = requests.post(
-            "http://ec2-3-8-185-82.eu-west-2.compute.amazonaws.com/api/v1/lovense/qrCode",
+            "http://81.100.246.35/api/v1/lovense/qrCode",
             json={"uid": str(persistent.uuid), "uname": store.name},
         )
         json_content: Any = response.json()
@@ -130,7 +125,7 @@ def set_lovense_user() -> None:
 
     try:
         response: requests.Response = requests.get(
-            f"http://ec2-3-8-185-82.eu-west-2.compute.amazonaws.com/api/v1/lovense/users/{persistent.uuid}"
+            f"http://81.100.246.35/api/v1/lovense/users/{persistent.uuid}"
         )
 
         if response.status_code == 404:
