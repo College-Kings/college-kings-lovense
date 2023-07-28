@@ -22,7 +22,7 @@ class Lovense:
         }
 
         try:
-            response: requests.Response = requests.post(
+            requests.post(
                 f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command",
                 json=data,
             )
@@ -40,7 +40,7 @@ class Lovense:
         }
 
         try:
-            response: requests.Response = requests.post(
+            requests.post(
                 f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command",
                 json=data,
             )
@@ -58,7 +58,7 @@ class Lovense:
         }
 
         try:
-            response: requests.Response = requests.post(
+            requests.post(
                 f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command",
                 json=data,
             )
@@ -75,7 +75,7 @@ class Lovense:
         }
 
         try:
-            response: requests.Response = requests.post(
+            requests.post(
                 f"http://{persistent.lovense_local_ip}:{persistent.lovense_http_port}/command",
                 json=data,
             )
