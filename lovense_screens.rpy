@@ -31,14 +31,14 @@ screen connect_lovense():
             add "lovense/images/game_mode_example.webp" xalign 0.5
 
             null height 30
-            
+
             button:
                 idle_background "blue_button_idle"
                 hover_background "blue_button_hover"
                 action ui.callsinnewcontext("lovense_connect_via_game_mode")
                 padding (40, 25)
                 align (0.5, 0.5)
-                
+
                 text "Connect With Game Mode" align (0.5, 0.5)
 
             text "No connection to external servers (LAN Only)" align (0.5, 0.5)
@@ -61,7 +61,7 @@ screen connect_lovense():
                     action ui.callsinnewcontext("lovense_connect_via_qr_code")
                     padding (40, 25)
                     xalign 0.5
-                    
+
                     text "Connect With QR Code" align (0.5, 0.5)
 
                 text "Requires connection to Lovense Server"
