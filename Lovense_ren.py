@@ -1,4 +1,5 @@
 import os
+import subprocess
 import requests
 from typing import Any, Optional
 
@@ -85,7 +86,12 @@ class Lovense:
 
 def get_server_status() -> bool:
     try:
-        if requests.get("http://81.100.246.35/api/v1/server/status").status_code != 200:
+        if (
+            requests.get(
+                "http://81.100.246.35/api/v1/server/status", timeout=1
+            ).status_code
+            != 200
+        ):
             persistent.lovense_local_ip = "Server Offline"
             persistent.lovense_http_port = "Please connect with Game Mode"
             return False

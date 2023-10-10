@@ -80,7 +80,8 @@ screen connect_lovense():
         offset (-50, -50)
         text_size 32
 
-    timer 5 action [Function(set_lovense_user), SetScreenVariable("qr_image", download_qr_code())] repeat True
+    timer 5 action Function(set_lovense_user) repeat True
+    on "show" action SetScreenVariable("qr_image", download_qr_code())
 
 
 image lovense_remote_download = "lovense/images/lovense_remote_download.webp"
