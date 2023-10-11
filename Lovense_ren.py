@@ -9,6 +9,8 @@ from renpy.game import persistent
 init python:
 """
 
+SERVER_IP = "http://81.100.246.35"
+
 
 class Lovense:
     @staticmethod
@@ -85,12 +87,7 @@ class Lovense:
 
 def get_server_status() -> bool:
     try:
-        if (
-            requests.get(
-                "http://81.100.246.35/api/v1/server/status", timeout=1
-            ).status_code
-            != 200
-        ):
+        if requests.get(SERVER_IP, timeout=1).status_code != 200 or True:
             persistent.lovense_local_ip = "Server Offline"
             persistent.lovense_http_port = "Please connect with Game Mode"
             return False
@@ -108,7 +105,7 @@ def download_qr_code() -> Optional[str]:
 
     try:
         response: requests.Response = requests.post(
-            "http://81.100.246.35/api/v1/lovense/qrCode",
+            f"{SERVER_IP}/api/v1/lovense/qrCode",
             json={"uid": str(persistent.uuid), "uname": store.name},
         )
         json_content: Any = response.json()
@@ -130,7 +127,7 @@ def set_lovense_user() -> None:
 
     try:
         response: requests.Response = requests.get(
-            f"http://81.100.246.35/api/v1/lovense/users/{persistent.uuid}"
+            f"{SERVER_IP}/api/v1/lovense/users/{persistent.uuid}"
         )
 
         if response.status_code == 404:
@@ -149,5 +146,5 @@ def set_lovense_user() -> None:
     persistent.lovense_local_ip = lovense_user["domain"]
 
 
-persistent.lovense_local_ip = ""
-persistent.lovense_http_port = ""
+persistent.lovense_local_ip = "Server Offline"
+persistent.lovense_http_port = "Please connect with Game Mode"

@@ -1,7 +1,3 @@
-default persistent.lovense_local_ip = ""
-default persistent.lovense_http_port = ""
-
-
 screen connect_lovense():
     tag lovense
     predict False
@@ -44,7 +40,7 @@ screen connect_lovense():
             text "No connection to external servers (LAN Only)" align (0.5, 0.5)
 
         # QR Code
-        if persistent.lovense_http_port != "Server Offline":
+        if persistent.lovense_local_ip != "Server Offline":
             vbox:
                 align (0.5, 1.0)
                 yoffset -200
@@ -81,7 +77,10 @@ screen connect_lovense():
         text_size 32
 
     timer 5 action Function(set_lovense_user) repeat True
+    timer 30 action SetScreenVariable("qr_image", download_qr_code()) repeat True
+
     on "show" action SetScreenVariable("qr_image", download_qr_code())
+    on "replace" action SetScreenVariable("qr_image", download_qr_code())
 
 
 image lovense_remote_download = "lovense/images/lovense_remote_download.webp"
