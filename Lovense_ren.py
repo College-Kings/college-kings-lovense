@@ -1,6 +1,6 @@
 import os
 import requests
-from typing import Any, Optional
+from typing import Optional
 
 from renpy import config, store
 from renpy.game import persistent
@@ -15,7 +15,7 @@ SERVER_IP = "http://81.100.246.35"
 class Lovense:
     @staticmethod
     def vibrate(strength: int, time: float = 0, stop_previous: bool = True) -> None:
-        data: dict[str, Any] = {
+        data: dict[str, object] = {
             "command": "Function",
             "action": f"Vibrate:{strength}",
             "timeSec": time,
@@ -33,7 +33,7 @@ class Lovense:
 
     @staticmethod
     def rotate(strength: int, time: int = 0, stop_previous: bool = True) -> None:
-        data: dict[str, Any] = {
+        data: dict[str, object] = {
             "command": "Function",
             "action": f"Rotate:{strength}",
             "timeSec": time,
@@ -51,7 +51,7 @@ class Lovense:
 
     @staticmethod
     def pump(strength: int, time: int = 0, stop_previous: bool = True) -> None:
-        data: dict[str, Any] = {
+        data: dict[str, object] = {
             "command": "Function",
             "action": f"Pump:{strength}",
             "timeSec": time,
@@ -69,7 +69,7 @@ class Lovense:
 
     @staticmethod
     def stop() -> None:
-        data: dict[str, Any] = {
+        data: dict[str, object] = {
             "command": "Function",
             "action": "Stop",
             "timeSec": 0,
@@ -105,10 +105,10 @@ def download_qr_code() -> Optional[str]:
 
     try:
         response: requests.Response = requests.post(
-            f"{SERVER_IP}/api/v1/lovense/qrCode",
+            f"{SERVER_IP}/api/v1/lovense/qr_code",
             json={"uid": str(persistent.uuid), "uname": store.name},
         )
-        json_content: Any = response.json()
+        json_content = response.json()
 
         with open(os.path.join(config.gamedir, "lovense_qr_code.jpg"), "wb") as f:
             f.write(requests.get(json_content["data"]["qr"]).content)
@@ -135,7 +135,7 @@ def set_lovense_user() -> None:
             persistent.lovense_http_port = ""
             return
 
-        lovense_user: Any = response.json()
+        lovense_user = response.json()
     except Exception as e:
         persistent.lovense_local_ip = "Server Error"
         persistent.lovense_http_port = "Please connect with Game Mode"
