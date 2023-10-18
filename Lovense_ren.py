@@ -88,15 +88,13 @@ class Lovense:
 def get_server_status() -> bool:
     try:
         if requests.get(SERVER_IP, timeout=1).status_code != 200 or True:
-            persistent.lovense_local_ip = "Server Offline"
-            persistent.lovense_http_port = "Please connect with Game Mode"
+            store.lovense_server_status = False
+            store.lovense_status_message = (
+                "Server Offline. Please connect with Game Mode"
+            )
             return False
     except Exception:
-        persistent.lovense_local_ip = "Server Offline"
-        persistent.lovense_http_port = "Please connect with Game Mode"
         return False
-
-    return True
 
 
 def download_qr_code() -> Optional[str]:
@@ -113,8 +111,7 @@ def download_qr_code() -> Optional[str]:
         with open(os.path.join(config.gamedir, "lovense_qr_code.jpg"), "wb") as f:
             f.write(requests.get(json_content["data"]["qr"]).content)
     except Exception as e:
-        persistent.lovense_local_ip = "Server Error"
-        persistent.lovense_http_port = "Please connect with Game Mode"
+        store.lovense_server_status = False
         print(e)
         return
 
@@ -131,14 +128,14 @@ def set_lovense_user() -> None:
         )
 
         if response.status_code == 404:
-            persistent.lovense_local_ip = "User not found"
-            persistent.lovense_http_port = ""
+            store.lovense_status_message = (
+                "User not found. Please connect with Game Mode"
+            )
             return
 
         lovense_user = response.json()
     except Exception as e:
-        persistent.lovense_local_ip = "Server Error"
-        persistent.lovense_http_port = "Please connect with Game Mode"
+        store.lovense_server_status = False
         print(e)
         return
 
@@ -146,5 +143,7 @@ def set_lovense_user() -> None:
     persistent.lovense_local_ip = lovense_user["domain"]
 
 
-persistent.lovense_local_ip = "Server Offline"
-persistent.lovense_http_port = "Please connect with Game Mode"
+lovense_server_status = get_server_status()
+lovense_status_message = "Server Offline. Please connect with Game Mode"
+persistent.lovense_local_ip = ""
+persistent.lovense_http_port = ""

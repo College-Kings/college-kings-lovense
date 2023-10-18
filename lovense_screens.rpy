@@ -40,7 +40,7 @@ screen connect_lovense():
             text "No connection to external servers (LAN Only)" align (0.5, 0.5)
 
         # QR Code
-        if persistent.lovense_local_ip != "Server Offline":
+        if lovense_server_status:
             vbox:
                 align (0.5, 1.0)
                 yoffset -200
@@ -61,6 +61,13 @@ screen connect_lovense():
                     text "Connect With QR Code" align (0.5, 0.5)
 
                 text "Requires connection to Lovense Server"
+
+    if lovense_status_message:
+        text "Status Message: {}".format(lovense_status_message):
+            xpos 20
+            yalign 1.0
+            yoffset -20
+            xsize 750
 
     vbox:
         align (0.5, 1.0)
