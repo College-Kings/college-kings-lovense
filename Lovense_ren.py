@@ -181,7 +181,7 @@ class Lovense:
         self.status_message = ""
         return True
 
-    def download_qr_code(self) -> Optional[str]:
+    def download_qr_code(self) -> None:
         if not self.get_server_status():
             return
 
@@ -204,7 +204,7 @@ class Lovense:
 
         try:
             response: requests.Response = requests.get(
-                f"{SERVER_IP}/api/v1/lovense/user/{persistent.uuid}"
+                f"{SERVER_IP}/api/v1/lovense/users/{persistent.uuid}"
             )
 
             if response.status_code == 404:
