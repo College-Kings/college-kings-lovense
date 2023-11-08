@@ -2,7 +2,7 @@ import datetime
 import json
 import os
 import requests
-from typing import Any, Optional
+from typing import Any, Iterable, Optional
 
 from renpy import config, store
 from renpy.game import persistent
@@ -55,6 +55,22 @@ class Lovense:
         except Exception:
             return None
 
+    def send_function(
+        self,
+        actions: Iterable[tuple[str, int]],
+        time_sec: float = 0,
+        stop_previous: bool = True,
+    ) -> None:
+        data: dict[str, object] = {
+            "command": "Function",
+            "action": ",".join(f"{action}:{value}" for action, value in actions),
+            "timeSec": time_sec,
+            "stopPrevious": int(stop_previous),
+            "apiVer": 1,
+        }
+
+        self._send_command(data)
+
     def get_toys(self) -> None:
         data: dict[str, str] = {"command": "GetToys"}
 
@@ -67,106 +83,42 @@ class Lovense:
     def vibrate(
         self, strength: int, time: float = 0, stop_previous: bool = True
     ) -> None:
-        data: dict[str, object] = {
-            "command": "Function",
-            "action": f"Vibrate:{strength}",
-            "timeSec": time,
-            "stopPrevious": int(stop_previous),
-            "apiVer": 1,
-        }
-
-        self._send_command(data)
+        self.send_function((("Vibrate", strength),), time, stop_previous)
 
         self.current_strengths[LovenseAction.VIBRATE] = strength
 
     def rotate(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
-        data: dict[str, object] = {
-            "command": "Function",
-            "action": f"Rotate:{strength}",
-            "timeSec": time,
-            "stopPrevious": int(stop_previous),
-            "apiVer": 1,
-        }
-
-        self._send_command(data)
+        self.send_function((("Rotate", strength),), time, stop_previous)
 
         self.current_strengths[LovenseAction.ROTATE] = strength
 
     def pump(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
-        data: dict[str, object] = {
-            "command": "Function",
-            "action": f"Pump:{strength}",
-            "timeSec": time,
-            "stopPrevious": int(stop_previous),
-            "apiVer": 1,
-        }
-
-        self._send_command(data)
+        self.send_function((("Pump", strength),), time, stop_previous)
 
         self.current_strengths[LovenseAction.PUMP] = strength
 
     def thrust(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
-        data: dict[str, object] = {
-            "command": "Function",
-            "action": f"Thrusting:{strength}",
-            "timeSec": time,
-            "stopPrevious": int(stop_previous),
-            "apiVer": 1,
-        }
-
-        self._send_command(data)
+        self.send_function((("Thrust", strength),), time, stop_previous)
 
         self.current_strengths[LovenseAction.THRUST] = strength
 
     def finger(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
-        data: dict[str, object] = {
-            "command": "Function",
-            "action": f"Fingering:{strength}",
-            "timeSec": time,
-            "stopPrevious": int(stop_previous),
-            "apiVer": 1,
-        }
-
-        self._send_command(data)
+        self.send_function((("Finger", strength),), time, stop_previous)
 
         self.current_strengths[LovenseAction.FINGER] = strength
 
     def suction(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
-        data: dict[str, object] = {
-            "command": "Function",
-            "action": f"Suction:{strength}",
-            "timeSec": time,
-            "stopPrevious": int(stop_previous),
-            "apiVer": 1,
-        }
-
-        self._send_command(data)
+        self.send_function((("Suction", strength),), time, stop_previous)
 
         self.current_strengths[LovenseAction.SUCTION] = strength
 
     def depth(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
-        data: dict[str, object] = {
-            "command": "Function",
-            "action": f"Depth:{strength}",
-            "timeSec": time,
-            "stopPrevious": int(stop_previous),
-            "apiVer": 1,
-        }
-
-        self._send_command(data)
+        self.send_function((("Depth", strength),), time, stop_previous)
 
         self.current_strengths[LovenseAction.DEPTH] = strength
 
     def all(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
-        data: dict[str, object] = {
-            "command": "Function",
-            "action": f"All:{strength}",
-            "timeSec": time,
-            "stopPrevious": int(stop_previous),
-            "apiVer": 1,
-        }
-
-        self._send_command(data)
+        self.send_function((("All", strength),), time, stop_previous)
 
         self.current_strengths = {k: strength for k in self.current_strengths}
 
