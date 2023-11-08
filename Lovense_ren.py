@@ -33,6 +33,7 @@ class Lovense:
             "thrust": 0,
             "finger": 0,
             "suction": 0,
+            "depth": 0,
         }
 
     def _send_command(self, data: dict[str, Any]) -> Optional[dict[str, Any]]:
@@ -45,7 +46,7 @@ class Lovense:
         except Exception:
             return None
 
-    def get_toys(self):
+    def get_toys(self) -> None:
         data: dict[str, str] = {"command": "GetToys"}
 
         json_content = self._send_command(data)
@@ -134,6 +135,19 @@ class Lovense:
 
         self.current_strength["suction"] = strength
 
+    def depth(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
+        data: dict[str, object] = {
+            "command": "Function",
+            "action": f"Depth:{strength}",
+            "timeSec": time,
+            "stopPrevious": int(stop_previous),
+            "apiVer": 1,
+        }
+
+        self._send_command(data)
+
+        self.current_strength["depth"] = strength
+
     def all(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
         data: dict[str, object] = {
             "command": "Function",
@@ -151,6 +165,7 @@ class Lovense:
         self.current_strength["thrust"] = strength
         self.current_strength["finger"] = strength
         self.current_strength["suction"] = strength
+        self.current_strength["depth"] = strength
 
     def stop(self) -> None:
         data: dict[str, object] = {
@@ -168,6 +183,7 @@ class Lovense:
         self.current_strength["thrust"] = 0
         self.current_strength["finger"] = 0
         self.current_strength["suction"] = 0
+        self.current_strength["depth"] = 0
 
     def get_server_status(self) -> bool:
         try:
