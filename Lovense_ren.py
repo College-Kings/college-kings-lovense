@@ -7,6 +7,8 @@ from typing import Any, Optional
 from renpy import config, store
 from renpy.game import persistent
 
+from game.lovense.LovenseAction_ren import LovenseAction
+
 """renpy
 init python:
 """
@@ -15,6 +17,17 @@ SERVER_IP = "http://81.100.246.35"
 
 
 class Lovense:
+    MAX_STRENGTHS = {
+        LovenseAction.VIBRATE: 20,
+        LovenseAction.ROTATE: 20,
+        LovenseAction.PUMP: 3,
+        LovenseAction.THRUST: 20,
+        LovenseAction.FINGER: 20,
+        LovenseAction.SUCTION: 20,
+        LovenseAction.DEPTH: 3,
+        LovenseAction.ALL: 20,
+    }
+
     def __init__(self) -> None:
         self.local_ip: str = ""
         self.http_port: str = ""
@@ -26,14 +39,10 @@ class Lovense:
         self.toys: dict[str, str] = {}
         self.last_updated: int = 0
 
-        self.current_strength: dict[str, int] = {
-            "vibrate": 0,
-            "rotate": 0,
-            "pump": 0,
-            "thrust": 0,
-            "finger": 0,
-            "suction": 0,
-            "depth": 0,
+        self.current_strengths: dict[LovenseAction, int] = {
+            action: 0
+            for action in LovenseAction
+            if action not in (LovenseAction.ALL, LovenseAction.STOP)
         }
 
     def _send_command(self, data: dict[str, Any]) -> Optional[dict[str, Any]]:
@@ -68,7 +77,7 @@ class Lovense:
 
         self._send_command(data)
 
-        self.current_strength["vibrate"] = strength
+        self.current_strengths[LovenseAction.VIBRATE] = strength
 
     def rotate(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
         data: dict[str, object] = {
@@ -81,7 +90,7 @@ class Lovense:
 
         self._send_command(data)
 
-        self.current_strength["rotate"] = strength
+        self.current_strengths[LovenseAction.ROTATE] = strength
 
     def pump(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
         data: dict[str, object] = {
@@ -94,7 +103,7 @@ class Lovense:
 
         self._send_command(data)
 
-        self.current_strength["pump"] = strength
+        self.current_strengths[LovenseAction.PUMP] = strength
 
     def thrust(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
         data: dict[str, object] = {
@@ -107,7 +116,7 @@ class Lovense:
 
         self._send_command(data)
 
-        self.current_strength["thrust"] = strength
+        self.current_strengths[LovenseAction.THRUST] = strength
 
     def finger(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
         data: dict[str, object] = {
@@ -120,7 +129,7 @@ class Lovense:
 
         self._send_command(data)
 
-        self.current_strength["finger"] = strength
+        self.current_strengths[LovenseAction.FINGER] = strength
 
     def suction(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
         data: dict[str, object] = {
@@ -133,7 +142,7 @@ class Lovense:
 
         self._send_command(data)
 
-        self.current_strength["suction"] = strength
+        self.current_strengths[LovenseAction.SUCTION] = strength
 
     def depth(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
         data: dict[str, object] = {
@@ -146,7 +155,7 @@ class Lovense:
 
         self._send_command(data)
 
-        self.current_strength["depth"] = strength
+        self.current_strengths[LovenseAction.DEPTH] = strength
 
     def all(self, strength: int, time: int = 0, stop_previous: bool = True) -> None:
         data: dict[str, object] = {
@@ -159,13 +168,7 @@ class Lovense:
 
         self._send_command(data)
 
-        self.current_strength["vibrate"] = strength
-        self.current_strength["rotate"] = strength
-        self.current_strength["pump"] = strength
-        self.current_strength["thrust"] = strength
-        self.current_strength["finger"] = strength
-        self.current_strength["suction"] = strength
-        self.current_strength["depth"] = strength
+        self.current_strengths = {k: strength for k in self.current_strengths}
 
     def stop(self) -> None:
         data: dict[str, object] = {
@@ -177,13 +180,7 @@ class Lovense:
 
         self._send_command(data)
 
-        self.current_strength["vibrate"] = 0
-        self.current_strength["rotate"] = 0
-        self.current_strength["pump"] = 0
-        self.current_strength["thrust"] = 0
-        self.current_strength["finger"] = 0
-        self.current_strength["suction"] = 0
-        self.current_strength["depth"] = 0
+        self.current_strengths = {k: 0 for k in self.current_strengths}
 
     def get_server_status(self) -> bool:
         try:
