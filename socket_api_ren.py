@@ -15,7 +15,7 @@ init python:
 """
 
 
-class Lovense:
+class LovenseSocket:
     def __init__(self) -> None:
         self.socket = socketio.Client()
 
