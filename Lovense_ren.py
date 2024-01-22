@@ -2,7 +2,7 @@ import datetime
 import json
 import os
 import requests
-from typing import Any, Iterable, Optional
+from typing import Any, ClassVar, Iterable, Optional
 
 from renpy import config, store
 from renpy.game import persistent
@@ -17,7 +17,7 @@ SERVER_IP = "http://81.100.246.35"
 
 
 class Lovense:
-    MAX_STRENGTHS = {
+    MAX_STRENGTHS: ClassVar[dict[LovenseAction, int]] = {
         LovenseAction.VIBRATE: 20,
         LovenseAction.ROTATE: 20,
         LovenseAction.PUMP: 3,
