@@ -18,7 +18,7 @@ def parse_lovense(lexer: Lexer) -> tuple[str, str]:
     action: Optional[str] = lexer.name()
 
     if not action:
-        renpy.error("Expected action name.")  # type: ignore
+        renpy.error("Expected action name.")
 
     if action == "stop":
         return (action, "0")
@@ -26,9 +26,9 @@ def parse_lovense(lexer: Lexer) -> tuple[str, str]:
     strength = lexer.simple_expression()
 
     if not strength:
-        renpy.error("Expected strength.")  # type: ignore
+        renpy.error("Expected strength.")
 
-    return (action, strength)  # type: ignore
+    return (action, strength)
 
 
 def lint_lovense(lovense_expr: tuple[str, str]) -> None:
@@ -36,12 +36,14 @@ def lint_lovense(lovense_expr: tuple[str, str]) -> None:
     try:
         action_func = getattr(lovense, action)
     except AttributeError:
-        renpy.error(f"Unrecognized lovense action '{action}'. Please check if the action name is correct and supported.")  # type: ignore
-        return
+        renpy.error(
+            f"Unrecognized lovense action '{action}'. Please check if the action name is correct and supported."
+        )
 
     if not callable(action_func):
-        renpy.error(f"The lovense action '{action}' is not a function. Please ensure that it is a valid callable action.")  # type: ignore
-        return
+        renpy.error(
+            f"The lovense action '{action}' is not a function. Please ensure that it is a valid callable action."
+        )
 
     if action == "stop":
         return
@@ -49,25 +51,30 @@ def lint_lovense(lovense_expr: tuple[str, str]) -> None:
     try:
         strength = eval(lovense_expr[1])
     except (SyntaxError, NameError, TypeError) as e:
-        renpy.error(f"The strength expression '{lovense_expr[1]}' could not be evaluated due to an error: {e}")  # type: ignore
-        return
+        renpy.error(
+            f"The strength expression '{lovense_expr[1]}' could not be evaluated due to an error: {e}"
+        )
 
     if not isinstance(strength, int):
-        renpy.error(f"The lovense strength value '{strength}' is not an integer. Strength values must be integer types.")  # type: ignore
-        return
+        renpy.error(
+            f"The lovense strength value '{strength}' is not an integer. Strength values must be integer types."
+        )
 
     if strength < 0:
-        renpy.error(f"The lovense strength value '{strength}' is negative. Strength values must be non-negative integers.")  # type: ignore
-        return
+        renpy.error(
+            f"The lovense strength value '{strength}' is negative. Strength values must be non-negative integers."
+        )
 
     max_strength = Lovense.MAX_STRENGTHS.get(LovenseAction[action.upper()], None)
     if max_strength is None:
-        renpy.error(f"The action '{action}' is not associated with a maximum strength value in 'Lovense.MAX_STRENGTHS'.")  # type: ignore
-        return
+        renpy.error(
+            f"The action '{action}' is not associated with a maximum strength value in 'Lovense.MAX_STRENGTHS'."
+        )
 
     if strength > max_strength:
-        renpy.error(f"The strength '{strength}' exceeds the maximum allowed strength of '{max_strength}' for the action '{action}'.")  # type: ignore
-        return
+        renpy.error(
+            f"The strength '{strength}' exceeds the maximum allowed strength of '{max_strength}' for the action '{action}'."
+        )
 
 
 def execute_lovense(lovense_expr: tuple[str, str]) -> None:
@@ -84,7 +91,7 @@ def execute_lovense(lovense_expr: tuple[str, str]) -> None:
     return
 
 
-renpy.register_statement(  # type: ignore
+renpy.register_statement(
     name="lovense",
     parse=parse_lovense,
     lint=lint_lovense,
