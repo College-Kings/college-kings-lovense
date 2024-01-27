@@ -1,14 +1,15 @@
-import datetime
-import json
-import os
+# import datetime
+# import json
+# import os
 import requests
-from typing import Any, Iterable, Optional
+
+from typing import Any
 import socketio
 
-from renpy import config, store
-from renpy.game import persistent
+# from renpy import config, store
+# from renpy.game import persistent
 
-from game.lovense.LovenseAction_ren import LovenseAction
+# from game.lovense.LovenseAction_ren import LovenseAction
 
 """renpy
 init python:
@@ -36,8 +37,10 @@ class LovenseSocket:
         self.socket.connect(url)  # type: ignore
 
     def get_qr_code(self, auth_token: str) -> str:
-        @self.socket.on("basicapi_get_qrcode_tc")
-        def on_qr_code(data) -> None:
+        @self.socket.event
+        def basicapi_get_qrcode_tc(  # pyright: ignore[reportUnusedFunction]
+            data: Any,
+        ) -> None:
             print(data)
 
         self.socket.emit("basicapi_get_qrcode_ts", {"ackId": auth_token})
