@@ -1,5 +1,6 @@
 screen connect_lovense():
     tag lovense
+    modal True
     predict False
 
     default image_path = "lovense/images/"
@@ -9,7 +10,7 @@ screen connect_lovense():
     imagebutton:
         idle "return_button_idle"
         hover "return_button_hover"
-        action Hide()
+        action Return()
 
     text "Connect to Lovense App" xalign 0.5 ypos 50 style "montserrat_extra_bold_64"
 
@@ -116,9 +117,6 @@ screen connect_lovense():
         textbutton "Get your Lovense toys here":
             action OpenURL("https://www.lovense.com/r/mw4xb8")
             text_size 32
-
-    on "show" action Function(lovense.refresh)
-    on "replace" action Function(lovense.refresh)
 
 
 image lovense_remote_download = "lovense/images/lovense_remote_download.webp"
