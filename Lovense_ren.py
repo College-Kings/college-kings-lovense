@@ -1,11 +1,11 @@
 import datetime
 import json
 import os
-import requests
 from typing import Any, ClassVar, Iterable, Optional
 
 from renpy import config, store
 from renpy.game import persistent
+import renpy.exports as renpy
 
 from game.lovense.LovenseAction_ren import LovenseAction
 
@@ -13,7 +13,7 @@ from game.lovense.LovenseAction_ren import LovenseAction
 init python:
 """
 
-SERVER_IP = "http://81.100.246.35"
+SERVER_IP = "http://82.9.123.190"
 
 
 class Lovense:
@@ -47,11 +47,11 @@ class Lovense:
 
     def _send_command(self, data: dict[str, Any]) -> Optional[dict[str, Any]]:
         try:
-            response: requests.Response = requests.post(
+            return renpy.fetch(
                 f"http://{self.local_ip}:{self.http_port}/command",
+                method="POST",
                 json=data,
             )
-            return response.json()
         except Exception:
             return None
 
@@ -136,11 +136,11 @@ class Lovense:
 
     def get_server_status(self) -> bool:
         try:
-            if requests.get(SERVER_IP, timeout=1).status_code != 200:
-                self.server_status = False
-                self.status_message = "Server Offline. Please connect with Game Mode"
-                return False
-        except Exception:
+            renpy.fetch(SERVER_IP, timeout=3)
+        except Exception as e:
+            print(e)
+            self.server_status = False
+            self.status_message = "Server Offline. Please connect with Game Mode"
             return False
 
         self.status_message = ""
@@ -151,15 +151,15 @@ class Lovense:
             return
 
         try:
-            response: requests.Response = requests.post(
+            content = renpy.fetch(
                 f"{SERVER_IP}/api/v1/lovense/qr_code",
+                method="POST",
                 json={"uid": str(persistent.uuid), "uname": store.name},
             )
-            json_content = response.json()
 
             with open(os.path.join(config.gamedir, "lovense_qr_code.jpg"), "wb") as f:
-                f.write(requests.get(json_content["data"]["qr"]).content)
-        except requests.exceptions.RequestException as e:
+                f.write(renpy.fetch(content["data"]["qr"]).content)
+        except Exception as e:
             self.server_status = False
             print(e)
 
@@ -168,17 +168,12 @@ class Lovense:
             return
 
         try:
-            response: requests.Response = requests.get(
+            lovense_user = renpy.fetch(
                 f"{SERVER_IP}/api/v1/lovense/users/{persistent.uuid}"
             )
-
-            if response.status_code == 404:
-                self.status_message = "User not found."
-                return
-
-            lovense_user = response.json()
         except Exception as e:
             self.server_status = False
+            self.status_message = "User not found."
             print(e)
             return
 
