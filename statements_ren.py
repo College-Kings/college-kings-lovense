@@ -14,7 +14,7 @@ python early:
 """
 
 
-def parse_lovense(lexer: Lexer) -> tuple[str, str]:
+def parse_lovense(lexer: "Lexer") -> tuple[str, str]:
     action: Optional[str] = lexer.name()
 
     if not action:
