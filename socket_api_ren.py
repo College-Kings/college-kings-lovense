@@ -1,13 +1,13 @@
 # import datetime
 # import json
 # import os
-import requests
 
 from typing import Any
 import socketio
 
 # from renpy import config, store
 # from renpy.game import persistent
+import renpy.exports as renpy
 
 # from game.lovense.LovenseAction_ren import LovenseAction
 
@@ -24,25 +24,22 @@ class LovenseSocket:
         return ""
 
     def validate_authorization(self, auth_token: str) -> dict[str, str]:
-        response = requests.post(
+        return renpy.fetch(
             "https://api.lovense-api.com/api/basicApi/getSocketUrl",
+            method="POST",
             json={"platform": "CrimsonSky", "authToken": str},
-        ).json()
-
-        print(response)
-
-        return response["data"]
+        )
 
     def connect(self, url: str) -> None:
         self.socket.connect(url)  # type: ignore
 
     def get_qr_code(self, auth_token: str) -> str:
-        @self.socket.event
+        @socket.event
         def basicapi_get_qrcode_tc(  # pyright: ignore[reportUnusedFunction]
             data: Any,
         ) -> None:
             print(data)
 
-        self.socket.emit("basicapi_get_qrcode_ts", {"ackId": auth_token})
+        socket.emit("basicapi_get_qrcode_ts", {"ackId": auth_token})
 
         return ""
