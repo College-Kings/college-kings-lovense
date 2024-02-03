@@ -82,7 +82,7 @@ screen connect_lovense():
 
                 vbox:
                     for toy in lovense.toys.values():
-                        if toy.get("nickname", ""):
+                        if toy.get("nickname"):
                             text "{} ({}) : {}%".format(toy["name"], toy["nickname"], toy["battery"])
                         else:
                             text "{} : {}%".format(toy["name"], toy["battery"])

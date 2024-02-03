@@ -65,7 +65,7 @@ def lint_lovense(lovense_expr: tuple[str, str]) -> None:
             f"The lovense strength value '{strength}' is negative. Strength values must be non-negative integers."
         )
 
-    max_strength = Lovense.MAX_STRENGTHS.get(LovenseAction[action.upper()], None)
+    max_strength = Lovense.MAX_STRENGTHS.get(LovenseAction[action.upper()])
     if max_strength is None:
         renpy.error(
             f"The action '{action}' is not associated with a maximum strength value in 'Lovense.MAX_STRENGTHS'."
