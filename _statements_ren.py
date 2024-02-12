@@ -3,8 +3,8 @@ from typing import Callable, Optional
 from renpy.lexer import Lexer
 import renpy.exports as renpy
 
-from game.lovense.LovenseAction_ren import LovenseAction
-from game.lovense.Lovense_ren import Lovense
+from game._lovense.LovenseAction_ren import LovenseAction
+from game._lovense.Lovense_ren import Lovense
 
 path_builder: bool
 lovense = Lovense()
@@ -48,12 +48,15 @@ def lint_lovense(lovense_expr: tuple[str, str]) -> None:
     if action == "stop":
         return
 
+    strength = 0
     try:
         strength = eval(lovense_expr[1])
-    except (SyntaxError, NameError, TypeError) as e:
+    except (SyntaxError, TypeError) as e:
         renpy.error(
             f"The strength expression '{lovense_expr[1]}' could not be evaluated due to an error: {e}"
         )
+    except NameError as e:
+        renpy.error(f"Warning: Usage of variables cannot be checked at lint time. {e}")
 
     if not isinstance(strength, int):
         renpy.error(

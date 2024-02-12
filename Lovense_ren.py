@@ -7,7 +7,7 @@ from renpy import config, store
 from renpy.game import persistent
 import renpy.exports as renpy
 
-from game.lovense.LovenseAction_ren import LovenseAction
+from game._lovense.LovenseAction_ren import LovenseAction
 
 """renpy
 init python:

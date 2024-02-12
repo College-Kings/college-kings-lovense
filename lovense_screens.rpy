@@ -3,9 +3,7 @@ screen connect_lovense():
     modal True
     predict False
 
-    default image_path = "lovense/images/"
-
-    add image_path + "background.webp"
+    add "lovense_background"
 
     imagebutton:
         idle "return_button_idle"
@@ -24,7 +22,7 @@ screen connect_lovense():
             yoffset -200
             spacing 10
 
-            add "lovense/images/game_mode_example.webp" xalign 0.5
+            add "lovense_game_mode_example" xalign 0.5
 
             null height 30
 
@@ -117,16 +115,6 @@ screen connect_lovense():
         textbutton "Get your Lovense toys here":
             action OpenURL("https://www.lovense.com/r/mw4xb8")
             text_size 32
-
-
-image lovense_remote_download = "lovense/images/lovense_remote_download.webp"
-image lovense_remote_profile = "lovense/images/lovense_remote_profile.webp"
-image lovense_remote_game_mode = "lovense/images/lovense_remote_game_mode.webp"
-image lovense_input_local_ip = "lovense/images/input_local_ip.webp"
-image lovense_input_http_port = "lovense/images/input_http_port.webp"
-
-image lovense_plus_view = "lovense/images/lovense_remote_plus_button.webp"
-image lovense_scan_qr = "lovense/images/lovense_remote_scan_qr.webp"
 
 
 label lovense_connect_via_game_mode:
