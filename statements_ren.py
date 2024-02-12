@@ -91,7 +91,7 @@ def execute_lovense(lovense_expr: tuple[str, str]) -> None:
     return
 
 
-renpy.register_statement(
+renpy.register_statement(  # type: ignore
     name="lovense",
     parse=parse_lovense,
     lint=lint_lovense,
