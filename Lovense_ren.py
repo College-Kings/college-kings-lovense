@@ -1,5 +1,4 @@
 import datetime
-import json
 import os
 from typing import Any, ClassVar, Iterable, Optional
 
@@ -156,6 +155,7 @@ class Lovense:
                 f"{SERVER_IP}/api/v1/lovense/qr_code",
                 method="POST",
                 json={"uid": str(persistent.uuid), "uname": store.name},
+                result="json",
             )
 
             with open(os.path.join(config.gamedir, "lovense_qr_code.jpg"), "wb") as f:
