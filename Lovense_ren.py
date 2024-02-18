@@ -51,6 +51,7 @@ class Lovense:
                 f"http://{self.local_ip}:{self.http_port}/command",
                 method="POST",
                 json=data,
+                result="json",
             )
         except Exception:
             return None
@@ -74,11 +75,11 @@ class Lovense:
     def get_toys(self) -> None:
         data: dict[str, str] = {"command": "GetToys"}
 
-        json_content = self._send_command(data)
-        if json_content is None:
+        result = self._send_command(data)
+        if result is None:
             return
 
-        self.toys = json.loads(json_content["data"]["toys"])
+        self.toys = result["data"]["toys"]
 
     def vibrate(
         self, strength: int, time: float = 0, stop_previous: bool = True
