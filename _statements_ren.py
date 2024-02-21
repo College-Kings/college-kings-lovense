@@ -1,4 +1,4 @@
-from typing import Callable, Optional
+from typing import Any, Callable, Optional
 
 from renpy.lexer import Lexer
 import renpy.exports as renpy
@@ -18,7 +18,7 @@ def parse_lovense(lexer: "Lexer") -> tuple[str, str]:
     action: Optional[str] = lexer.name()
 
     if not action:
-        renpy.error("Expected action name.")
+        lexer.error("Expected action name.")
 
     if action == "stop":
         return (action, "0")
@@ -26,19 +26,21 @@ def parse_lovense(lexer: "Lexer") -> tuple[str, str]:
     strength = lexer.simple_expression()
 
     if not strength:
-        renpy.error("Expected strength.")
+        lexer.error("Expected strength.")
 
     return (action, strength)
 
 
 def lint_lovense(lovense_expr: tuple[str, str]) -> None:
     action: str = lovense_expr[0]
+
     try:
-        action_func = getattr(lovense, action)
+        action_func: Any = getattr(lovense, action)
     except AttributeError:
         renpy.error(
             f"Unrecognized lovense action '{action}'. Please check if the action name is correct and supported."
         )
+        return
 
     if not callable(action_func):
         renpy.error(
@@ -48,14 +50,15 @@ def lint_lovense(lovense_expr: tuple[str, str]) -> None:
     if action == "stop":
         return
 
-    strength = 0
     try:
-        strength = eval(lovense_expr[1])
+        strength: Any = eval(lovense_expr[1])
     except (SyntaxError, TypeError) as e:
         renpy.error(
             f"The strength expression '{lovense_expr[1]}' could not be evaluated due to an error: {e}"
         )
+        return
     except NameError as e:
+        strength = 0
         renpy.error(f"Warning: Usage of variables cannot be checked at lint time. {e}")
 
     if not isinstance(strength, int):
@@ -68,11 +71,13 @@ def lint_lovense(lovense_expr: tuple[str, str]) -> None:
             f"The lovense strength value '{strength}' is negative. Strength values must be non-negative integers."
         )
 
-    max_strength = Lovense.MAX_STRENGTHS.get(LovenseAction[action.upper()])
-    if max_strength is None:
+    try:
+        max_strength: int = Lovense.MAX_STRENGTHS[LovenseAction[action.upper()]]
+    except KeyError:
         renpy.error(
             f"The action '{action}' is not associated with a maximum strength value in 'Lovense.MAX_STRENGTHS'."
         )
+        return
 
     if strength > max_strength:
         renpy.error(
