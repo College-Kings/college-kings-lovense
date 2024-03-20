@@ -78,12 +78,15 @@ screen connect_lovense():
 
                 null height 10
 
-                vbox:
-                    for toy in lovense.toys.values():
-                        if toy.get("nickname"):
-                            text "{} ({}) : {}%".format(toy["name"], toy["nickname"], toy["battery"])
-                        else:
-                            text "{} : {}%".format(toy["name"], toy["battery"])
+                if isinstance(lovense.toys, dict):
+                    vbox:
+                        for toy in lovense.toys.values():
+                            if toy.get("nickname"):
+                                text "{} ({}) : {}%".format(toy["name"], toy["nickname"], toy["battery"])
+                            else:
+                                text "{} : {}%".format(toy["name"], toy["battery"])
+                else:
+                    text "[lovense.toys]"
 
             null height 50
 
