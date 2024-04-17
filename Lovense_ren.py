@@ -8,11 +8,11 @@ import renpy.exports as renpy
 
 from game._lovense.LovenseAction_ren import LovenseAction
 
+SERVER_URL: str
+
 """renpy
 init python:
 """
-
-SERVER_IP = "http://82.9.123.190"
 
 
 class Lovense:
@@ -136,7 +136,7 @@ class Lovense:
 
     def get_server_status(self) -> bool:
         try:
-            renpy.fetch(SERVER_IP, timeout=3)
+            renpy.fetch(SERVER_URL, timeout=3)
         except Exception as e:
             print(e)
             self.server_status = False
@@ -152,7 +152,7 @@ class Lovense:
 
         try:
             content = renpy.fetch(
-                f"{SERVER_IP}/api/v1/lovense/qr_code",
+                f"{SERVER_URL}/api/v1/lovense/qr_code",
                 method="POST",
                 json={"uid": str(persistent.uuid), "uname": store.name},
                 result="json",
@@ -170,7 +170,7 @@ class Lovense:
 
         try:
             lovense_user = renpy.fetch(
-                f"{SERVER_IP}/api/v1/lovense/users/{persistent.uuid}"
+                f"{SERVER_URL}/api/v1/lovense/users/{persistent.uuid}"
             )
         except Exception as e:
             self.server_status = False
