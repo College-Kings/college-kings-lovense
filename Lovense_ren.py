@@ -33,7 +33,7 @@ class Lovense:
 
         self.last_refresh: datetime.datetime = datetime.datetime.now()
 
-        self.server_status: bool = self.get_server_status()
+        self.server_status: bool = False
         self.status_message: str = ""
         self.toys: dict[str, str] = {}
         self.last_updated: int = 0
